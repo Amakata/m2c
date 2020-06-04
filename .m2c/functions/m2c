@@ -1761,7 +1761,13 @@ m2c_init() {
         m2c_info_bold "\n[Installing Magento]\n\n"
 
         m2c_dots "Started Magento installation, it may take a while"
-        m2c_loading_install
+        # m2c_loading_install
+
+
+        m2c_info_bold "\n[Install composer packages]\n\n"
+        m2c_composer --notty install
+        m2c_info_bold "\n[Pull vendor]\n\n"
+        m2c_pull_exec vendor
 
         m2c_magento --notty setup:install \
                 --db-host="db.${M2C_CFG_DOMAIN_NAME}" \
