@@ -312,7 +312,7 @@ m2c_composer() {
         esac
     done
 
-    docker-compose exec -u app ${notty:+-T} php composer "${args[@]}"
+    docker-compose exec -u app ${notty:+-T} php php -d memory_limit=-1 /usr/local/bin/composer "${args[@]}"
 
     if [[ "$m2c_os" == "darwin" ]]
     then
@@ -2870,7 +2870,7 @@ m2c_magento() {
         esac
     done
 
-    docker-compose exec -u app ${notty:+-T} ${service} php bin/magento "${args[@]}"
+    docker-compose exec -u app ${notty:+-T} ${service} php -d memory_limit=-1 bin/magento "${args[@]}"
 }
 
 m2c_magerun() {
