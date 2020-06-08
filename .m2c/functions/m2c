@@ -2896,7 +2896,7 @@ m2c_magento() {
     done
 
     docker-compose exec -u app ${notty:+-T} ${service} php -d memory_limit=-1 bin/magento "${args[@]}"
-c}
+}
 
 m2c_magerun() {
     local notty \
