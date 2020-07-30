@@ -619,7 +619,7 @@ m2c_global_add() {
 
             if [[ -n ${M2C_GLOBAL_PORTAINER} ]]
             then
-                M2C_GLOBAL_PORTAINER="1.23.2"
+                M2C_GLOBAL_PORTAINER="1.24.0"
                 m2c_global_save_env
                 m2c_global_up portainer
             fi
@@ -3501,12 +3501,7 @@ m2c_sign() {
             -subj "/O=Mage2click/OU=IT/CN=${m2c_domains[0]}" >"${m2c_log}" 2>&1
         m2c_result $?
 
-        if [[ "$m2c_os" == "darwin" ]]
-        then
-            pass="m2c"
-        else
-            pass="m2c0"
-        fi
+        pass="m2c0"
 
         m2c_dots "Signing SSL certificate"
         m2c_loading
@@ -3605,7 +3600,7 @@ m2c_sync_error() {
 m2c_sync_exec() {
     local m2c_project_yml="${m2c_project_dir}/.m2c/mutagen/mutagen.yml"
     m2c_sync_yml_expand #TODO: check new mutagen versions, temporary fix for https://github.com/mutagen-io/mutagen/issues/128
-    m2c_mutagen project $@ "${m2c_project_yml}"
+    m2c_mutagen project $@ --project-file "${m2c_project_yml}"
     m2c_sync_yml_restore #TODO: check new mutagen versions, temporary fix for https://github.com/mutagen-io/mutagen/issues/128
 }
 
