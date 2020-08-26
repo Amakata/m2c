@@ -1783,6 +1783,16 @@ m2c_init() {
     then
         m2c_db_import "${m2c_magento_db_import}" "init"
         m2c_info_bold "\n[Installing Magento]\n\n"
+
+        m2c_dots "Import config.php"
+        m2c_loading
+        m2c_magento --notty app:config:import --no-interaction >"${m2c_log}" 2>&1
+        m2c_result $?
+
+        m2c_dots "Execute setup:upgrade"
+        m2c_loading
+        m2c_magento --notty setup:upgrade --no-interaction >"${m2c_log}" 2>&1
+        m2c_result $?
     else
         m2c_info_bold "\n[Installing Magento]\n\n"
 
