@@ -1300,7 +1300,7 @@ m2c_init() {
     local m2c_mariadb_versions=("10.4" "10.3" "10.2" "10.1" "10.0")
     local m2c_redis_versions=("5.0" "4.0" "3.2")
     local m2c_magento_versions=("2.3.5" "2.3.4" "2.3.3" "2.3.2" "2.3.1" "2.3.0" \
-            "2.2.9" "2.2.8" "2.2.7" "2.2.6" "2.2.5" "2.2.4" "2.2.3" "2.2.2" "2.2.1" "2.2.0" \
+            "2.2.11" "2.2.10" "2.2.9" "2.2.8" "2.2.7" "2.2.6" "2.2.5" "2.2.4" "2.2.3" "2.2.2" "2.2.1" "2.2.0" \
             "2.1.18" "2.1.17" "2.1.16" "2.1.15" "2.1.14" "2.1.13" "2.1.12" "2.1.11" "2.1.10" \
             "2.1.9" "2.1.8" "2.1.7" "2.1.6" "2.1.5" "2.1.4" "2.1.3" "2.1.2" "2.1.1" "2.1.0" \
             "2.0.18" "2.0.17" "2.0.16" "2.0.15" "2.0.14" "2.0.13" "2.0.12" "2.0.11" "2.0.10" \
@@ -3516,6 +3516,14 @@ m2c_sign() {
 
         m2c_dots "Signing SSL certificate"
         m2c_loading
+        echo openssl x509 -req -days 825 -sha256 -extensions v3_req \
+            -CA "${m2c_ssl_dir}/certs/rootCA.crt" \
+            -CAkey "${m2c_ssl_dir}/private/rootCA.key" \
+            -CAcreateserial -passin pass:${pass} \
+            -in "${m2c_ssl_dir}/certs/m2c.csr" \
+            -out "${m2c_ssl_dir}/certs/m2c.crt" \
+            -extfile "${m2c_ssl_dir}/config/v3_ext.conf" >"${m2c_log}" 2>&1
+
         openssl x509 -req -days 825 -sha256 -extensions v3_req \
             -CA "${m2c_ssl_dir}/certs/rootCA.crt" \
             -CAkey "${m2c_ssl_dir}/private/rootCA.key" \
