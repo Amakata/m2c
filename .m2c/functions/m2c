@@ -1080,27 +1080,6 @@ m2c_grunt() {
     docker-compose exec -u app ${notty:+-T} php grunt "${args[@]}"
 }
 
-m2c_gulp() {
-    local notty \
-          args=()
-
-    while (("$#"))
-    do
-        case "$1" in
-            --notty)
-                notty=1
-                shift
-            ;;
-            *)
-                args+=( "$1" )
-                shift
-            ;;
-        esac
-    done
-
-    docker-compose exec -u app ${notty:+-T} php gulp "${args[@]}"
-}
-
 m2c_npm() {
     local notty \
           args=()
@@ -1201,8 +1180,6 @@ m2c_help() {
                 create a database backup before running this command.
   grunt         The grunt command-line interface. Runs grunt specific commands
                 at projects Docker containers.
-  gulp          The gulp command-line interface. Runs gulp specific commands
-                at projects Docker containers.
   info          Prints project info and Docker containers status.
   init          Initializes project in the current directory. Run
                 \`m2c init --help\` for command usage information.
@@ -1254,8 +1231,6 @@ m2c_help() {
                 Project sources on the host will be untouched. Don't forget to
                 create a database backup before running this command.
   grunt         The grunt command-line interface. Runs grunt specific commands
-                at projects Docker containers.
-  gulp          The gulp command-line interface. Runs gulp specific commands
                 at projects Docker containers.
   info          Prints project info and Docker containers status.
   init          Initializes project in the current directory. Run
@@ -1783,6 +1758,27 @@ m2c_init() {
     then
         m2c_db_import "${m2c_magento_db_import}" "init"
         m2c_info_bold "\n[Installing Magento]\n\n"
+
+        m2c_dots "Setup composer https://packagist.jp"
+        m2c_loading
+        m2c_composer --notty config -g repositories.packagist composer https://packagist.jp >"${m2c_log}" 2>&1
+        m2c_result $?
+
+        m2c_dots "Install hirak/prestissimo"
+        m2c_loading
+        m2c_composer --notty global require hirak/prestissimo >"${m2c_log}" 2>&1
+        m2c_result $?
+
+        m2c_dots "Creating composer auth.json"
+        m2c_loading
+        m2c_composer --notty config http-basic.repo.magento.com \
+            ${m2c_composer_public_key} ${m2c_composer_private_key} >"${m2c_log}" 2>&1
+        m2c_result $?
+
+        m2c_dots "Install composer packages"
+        m2c_loading
+        m2c_composer --notty install >"${m2c_log}" 2>&1
+        m2c_result $?
 
         m2c_dots "Import config.php"
         m2c_loading
