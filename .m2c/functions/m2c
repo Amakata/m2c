@@ -763,7 +763,7 @@ m2c_global_up() {
         m2c_loading
         (
             cd "${m2c_global_dir}/" && \
-            yes | docker-compose --project-name m2c up \
+            yes | docker-compose --project-name m2c up --env-file "${m2c_global_dir}/.env"\
                 --detach --force-recreate --no-color --no-deps ${service[$i]}
         ) >"${m2c_log}" 2>&1
         m2c_result $?
